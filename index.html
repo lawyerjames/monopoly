@@ -306,19 +306,19 @@
         <div class="status-row">
             <div class="status-cell">
                 <span class="status-label">契約總價</span>
-                <span class="status-number" id="card-contract-price">10,000.00 萬元</span>
+                <span class="status-number" id="card-contract-price">10,000 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">原始成本</span>
-                <span class="status-number" id="card-original-cost">8,000.00 萬元</span>
+                <span class="status-number" id="card-original-cost">8,000 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">可追加(減)費用</span>
-                <span class="status-number" id="card-adjustable-cost">0.00 萬元</span>
+                <span class="status-number" id="card-adjustable-cost">0 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">實際支出成本</span>
-                <span class="status-number" id="card-actual-cost">8,000.00 萬元</span>
+                <span class="status-number" id="card-actual-cost">8,000 萬元</span>
             </div>
         </div>
     </div>
@@ -430,7 +430,7 @@
     }
 
     function formatMoney(value) {
-        return `${formatNumber(value, 2)} 萬元`;
+        return `${formatNumber(Math.round(value))} 萬元`;
     }
 
     function makeState(contractDuration, contractPrice) {
@@ -671,7 +671,7 @@
                 } else if (selectedCondition.unit === "%" && costTargets.has(target)) {
                     const costBase = target === "actualCost" ? currentState.originalCost : input.contractPrice;
                     changeValue = Number((costBase * (randomValue / 100)).toFixed(2));
-                    baseLabel = `${randomValue}% (約 ${formatNumber(changeValue, 2)} 萬元)`;
+                    baseLabel = `${randomValue}% (約 ${formatNumber(Math.round(changeValue))} 萬元)`;
                 } else {
                     return;
                 }
