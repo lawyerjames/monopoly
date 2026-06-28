@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工程隨機條件產生器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        /* 輸入區域樣式 */
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fcfcfc;
+        }
+        .input-item {
+            min-width: 180px;
+            flex-grow: 1;
+        }
+        .input-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-item input,
+        .input-item select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #fff;
+        }
+        /* 主要按鈕樣式 */
+        #main-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 30px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #main-button:hover {
+            background-color: #218838;
+        }
+        .status-card {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .status-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .status-row + .status-row {
+            margin-top: 10px;
+        }
+        .status-cell {
+            padding: 10px 12px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+        .status-label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .status-number {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #212529;
+            word-break: break-word;
+        }
+        @media (max-width: 720px) {
+            .status-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        /* 結果區塊樣式 */
+        #result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background-color: #e9f5ff;
+            min-height: 80px;
+        }
+        #result-box h2 {
+            color: #007bff;
+            margin-top: 0;
+            border-bottom: 1px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        #selected-condition {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #dc3545;
+            display: block;
+            margin-bottom: 10px;
+        }
+        #calculated-impact {
+            font-size: 1.1em;
+            color: #007bff;
+        }
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .result-value {
+            padding: 10px 12px;
+            border-radius: 6px;
+            background-color: #fff;
+            border: 1px solid #b8daff;
+            font-weight: bold;
+            color: #155724;
+        }
+        /* 歷史記錄區塊樣式 */
+        #history-container {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .history-header h2 {
+            color: #007bff;
+            margin: 0;
+        }
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .history-actions button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            width: auto; /* 重置按鈕寬度 */
+            margin-top: 0;
+        }
+        #export-history-btn {
+            background-color: #007bff; /* 匯出按鈕使用藍色 */
+            color: white;
+        }
+        #export-history-btn:hover {
+            background-color: #0056b3;
+        }
+        #clear-history-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #clear-history-btn:hover {
+            background-color: #c82333;
+        }
+        /* 歷史項目樣式 */
+        .history-item {
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            background-color: #f8f8f8;
+        }
+        .history-item-time {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 3px;
+        }
+        .history-item-condition {
+            font-weight: bold;
+            color: #495057;
+        }
+        .history-item-impact {
+            margin-top: 5px;
+            color: #28a745;
+            font-style: italic;
+        }
+        /* 列表樣式 */
+        .conditions-list {
+            list-style: none;
+            padding: 0;
+            line-height: 1.8;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        .conditions-list li {
+            margin-bottom: 5px;
+            padding-left: 5px;
+            border-left: 3px solid #007bff50;
+        }
+        .impact {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .no-impact {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏗️ 工程隨機條件產生器 🎯</h1>
+
+    <div class="input-group">
+        <div class="input-item">
+            <label for="groupSelect">組別</label>
+            <select id="groupSelect">
+                <option value="一">第一組</option>
+                <option value="二">第二組</option>
+                <option value="三">第三組</option>
+                <option value="四">第四組</option>
+                <option value="五">第五組</option>
+                <option value="六">第六組</option>
+                <option value="七">第七組</option>
+                <option value="八">第八組</option>
+                <option value="九">第九組</option>
+                <option value="十">第十組</option>
+            </select>
+        </div>
+        <div class="input-item">
+            <label for="projectName">工程名稱</label>
+            <select id="projectName">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+        <div class="input-item">
+            <label for="totalDuration">契約工期(日曆天)</label>
+            <input type="number" id="totalDuration" value="365" min="1" required>
+        </div>
+        <div class="input-item">
+            <label for="totalPrice">契約總價 (萬元)</label>
+            <input type="number" id="totalPrice" value="10000" min="1" required>
+        </div>
+    </div>
+
+    <div class="status-card" id="status-card">
+        <div class="status-row">
+            <div class="status-cell">
+                <span class="status-label">契約工期</span>
+                <span class="status-number" id="card-contract-duration">365 日曆天</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">可展延工期</span>
+                <span class="status-number" id="card-extendable-duration">0 日曆天</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">總工期</span>
+                <span class="status-number" id="card-total-duration">365 日曆天</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">逾期天數</span>
+                <span class="status-number" id="card-overdue-days">0 日曆天</span>
+            </div>
+        </div>
+        <div class="status-row">
+            <div class="status-cell">
+                <span class="status-label">契約總價</span>
+                <span class="status-number" id="card-contract-price">10,000.00 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">原始成本</span>
+                <span class="status-number" id="card-original-cost">8,000.00 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">可追加(減)費用</span>
+                <span class="status-number" id="card-adjustable-cost">0.00 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">實際支出成本</span>
+                <span class="status-number" id="card-actual-cost">8,000.00 萬元</span>
+            </div>
+        </div>
+    </div>
+
+    <button id="main-button" onclick="selectRandomCondition()">選擇一個隨機條件並計算影響</button>
+
+    <div id="result-box">
+        <h2>✅ 最新隨機結果</h2>
+        <span id="selected-condition">請先選擇組別、工程名稱，並輸入契約工期與契約總價，然後點擊上方按鈕開始模擬。</span>
+        <span id="calculated-impact"></span>
+        <div class="result-summary">
+            <div class="result-value" id="final-duration">總工期：-</div>
+            <div class="result-value" id="settlement-price">契約總價：-</div>
+        </div>
+    </div>
+
+    <div id="history-container">
+        <div class="history-header">
+            <h2>📜 歷史記錄</h2>
+            <div class="history-actions">
+                <button id="export-history-btn" onclick="exportHistory()">匯出記錄 (TXT)</button>
+                <button id="clear-history-btn" onclick="clearHistory()">清除記錄</button>
+            </div>
+        </div>
+        <div id="history-list">尚無記錄。</div>
+    </div>
+
+    <br>
+    <h2>📝 條件列表 (共 20 項)</h2>
+    <ol class="conditions-list" id="conditions-list"></ol>
+
+</div>
+
+<script>
+    // --- 條件數據 ---
+    const conditions = [
+        { id: 1, text: "工地主任調度困難，工程進度落後", impact: "總工期增加", min: 1, max: 5, unit: "%", targets: ["totalDuration"] },
+        { id: 2, text: "工地發生重大職災，等待勞檢停工", impact: "總工期增加", min: 3, max: 5, unit: "天", targets: ["totalDuration"] },
+        { id: 3, text: "設計錯誤等待變更", impact: "總工期增加、可展延工期增加", min: 3, max: 30, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 4, text: "追加工項增加工期", impact: "總工期增加、可展延工期增加", min: 1, max: 5, unit: "%", targets: ["totalDuration", "extendableDuration"] },
+        { id: 5, text: "颱風來襲，停班停課", impact: "總工期增加、可展延工期增加", min: 1, max: 3, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 6, text: "連續豪雨，無法施工", impact: "總工期增加、可展延工期增加", min: 3, max: 10, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 7, text: "協力廠商提前交貨，實際工期減少", impact: "總工期減少", min: 1, max: 5, unit: "天", targets: ["totalDuration"] },
+        { id: 8, text: "協力廠商提前交貨，實際工期增加", impact: "總工期增加", min: 1, max: 5, unit: "天", targets: ["totalDuration"] },
+        { id: 9, text: "圖說設計錯誤，變更設計增加費用", impact: "總工期增加、實際支出成本增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "actualCost"] },
+        { id: 10, text: "施作錯誤，成本增加", impact: "實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
+        { id: 11, text: "中東發生戰爭，物價上漲，成本增加", impact: "實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
+        { id: 12, text: "中國經濟蕭條，整體物價下跌，成本減少", impact: "實際支出成本減少、可追加(減)費用減少", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
+        { id: 13, text: "老闆念完EMBA，引進新的管理方法，成本減少", impact: "實際支出成本減少", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
+        { id: 14, text: "工地主任收回扣，進貨報價提高，成本增加", impact: "實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
+        { id: 15, text: "發生地震，還好有保營造業綜合保險，無損失。", impact: "總工期增加、可展延工期增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration"] },
+        { id: 16, text: "發生火災，雖然有保火險，但有自付額", impact: "實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
+        { id: 17, text: "新任首長認為規劃不足，增加工項", impact: "契約總價增加、實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost", "adjustableCost"] },
+        { id: 18, text: "新版財劃法，教育部補助減少，減作項目", impact: "契約總價減少、實際支出成本減少", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost"] },
+        { id: 19, text: "新版財劃法，教育部補助減少，無法按期給付估驗款", impact: "無工期影響" },
+        { id: 20, text: "廠商因為業主無法按期給付估驗款跳票", impact: "無工期影響" }
+    ];
+
+    // 用來儲存歷史記錄的陣列
+    let historyRecords = [];
+    let accumulationKey = "";
+    let currentState = null;
+
+    const durationTargets = new Set(["totalDuration", "extendableDuration"]);
+    const costTargets = new Set(["contractPrice", "actualCost", "adjustableCost"]);
+    const targetLabels = {
+        totalDuration: "總工期",
+        extendableDuration: "可展延工期",
+        contractPrice: "契約總價",
+        actualCost: "實際支出成本",
+        adjustableCost: "可追加(減)費用"
+    };
+
+    // 填充條件列表到 HTML 
+    const listElement = document.getElementById('conditions-list');
+    conditions.forEach(c => {
+        const li = document.createElement('li');
+        let impactText;
+        if (c.impact === "無影響" || c.impact === "無工期影響") {
+            impactText = `<span class="no-impact">(影響：${c.impact})</span>`;
+        } else if (c.min === c.max) {
+             impactText = `<span class="impact">(影響：${c.impact} ${c.min}${c.unit})</span>`;
+        } else {
+            impactText = `<span class="impact">(影響：${c.impact} ${c.min}-${c.max}${c.unit})</span>`;
+        }
+        
+        li.innerHTML = `${c.id}、 ${c.text} ${impactText}`;
+        listElement.appendChild(li);
+    });
+
+    /**
+     * 獲取 min 和 max 之間 (包含) 的隨機整數
+     */
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function formatNumber(value, digits = 0) {
+        return Number(value).toLocaleString('zh-TW', {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits
+        });
+    }
+
+    function formatDuration(value) {
+        return `${formatNumber(Math.round(value))} 日曆天`;
+    }
+
+    function formatMoney(value) {
+        return `${formatNumber(value, 2)} 萬元`;
+    }
+
+    function makeState(contractDuration, contractPrice) {
+        const originalCost = Number((contractPrice * 0.8).toFixed(2));
+        return {
+            contractDuration,
+            extendableDuration: 0,
+            totalDuration: contractDuration,
+            overdueDays: 0,
+            contractPrice,
+            originalCost,
+            adjustableCost: 0,
+            actualCost: originalCost
+        };
+    }
+
+    function updateOverdueDays() {
+        if (!currentState) return;
+        currentState.overdueDays = Math.max(
+            0,
+            Math.round(currentState.totalDuration - currentState.contractDuration - currentState.extendableDuration)
+        );
+    }
+
+    function renderStatusCard() {
+        if (!currentState) return;
+        updateOverdueDays();
+        document.getElementById('card-contract-duration').textContent = formatDuration(currentState.contractDuration);
+        document.getElementById('card-extendable-duration').textContent = formatDuration(currentState.extendableDuration);
+        document.getElementById('card-total-duration').textContent = formatDuration(currentState.totalDuration);
+        document.getElementById('card-overdue-days').textContent = formatDuration(currentState.overdueDays);
+        document.getElementById('card-contract-price').textContent = formatMoney(currentState.contractPrice);
+        document.getElementById('card-original-cost').textContent = formatMoney(currentState.originalCost);
+        document.getElementById('card-adjustable-cost').textContent = formatMoney(currentState.adjustableCost);
+        document.getElementById('card-actual-cost').textContent = formatMoney(currentState.actualCost);
+    }
+
+    function readInputs() {
+        return {
+            group: document.getElementById('groupSelect').value,
+            projectName: document.getElementById('projectName').value,
+            contractDuration: parseFloat(document.getElementById('totalDuration').value),
+            contractPrice: parseFloat(document.getElementById('totalPrice').value)
+        };
+    }
+
+    function ensureStateForInputs(input) {
+        const currentKey = `${input.group}|${input.projectName}|${input.contractDuration}|${input.contractPrice}`;
+        if (currentKey !== accumulationKey || !currentState) {
+            currentState = makeState(input.contractDuration, input.contractPrice);
+            accumulationKey = currentKey;
+        }
+        renderStatusCard();
+    }
+
+    function resetSimulationState() {
+        historyRecords = [];
+        accumulationKey = "";
+        const input = readInputs();
+        if (!isNaN(input.contractDuration) && input.contractDuration > 0 && !isNaN(input.contractPrice) && input.contractPrice > 0) {
+            currentState = makeState(input.contractDuration, input.contractPrice);
+            renderStatusCard();
+        } else {
+            currentState = null;
+        }
+    }
+
+    function handleInputChange() {
+        const input = readInputs();
+        if (!isNaN(input.contractDuration) && input.contractDuration > 0 && !isNaN(input.contractPrice) && input.contractPrice > 0) {
+            currentState = makeState(input.contractDuration, input.contractPrice);
+            accumulationKey = "";
+            renderStatusCard();
+        }
+    }
+
+    document.getElementById('groupSelect').addEventListener('change', handleInputChange);
+    document.getElementById('projectName').addEventListener('change', handleInputChange);
+    document.getElementById('totalDuration').addEventListener('input', handleInputChange);
+    document.getElementById('totalPrice').addEventListener('input', handleInputChange);
+    handleInputChange();
+
+    /**
+     * 清除所有歷史記錄
+     */
+    function clearHistory() {
+        if (!confirm("確定要清除所有歷史記錄嗎？此操作無法恢復。")) {
+            return;
+        }
+        resetSimulationState();
+        const historyList = document.getElementById('history-list');
+        historyList.textContent = "尚無記錄。";
+        document.getElementById('result-box').style.display = "none";
+        document.getElementById('final-duration').textContent = "總工期：-";
+        document.getElementById('settlement-price').textContent = "契約總價：-";
+        alert("歷史記錄已清除！");
+    }
+
+    /**
+     * 新增: 匯出記錄到 TXT 檔案
+     */
+    function exportHistory() {
+        if (historyRecords.length === 0) {
+            alert("目前沒有任何記錄可以匯出。");
+            return;
+        }
+
+        // 1. 彈出對話框讓使用者輸入檔名
+        let fileName = prompt("請輸入匯出的檔案名稱 (不需副檔名):", "工程隨機條件記錄_" + new Date().toISOString().slice(0, 10));
+
+        if (fileName === null) {
+            return; // 使用者點擊了取消
+        }
+        
+        fileName = fileName.trim() || "random_event_log"; // 如果為空，設定一個預設檔名
+        fileName += ".txt"; // 確保是 .txt 檔案
+
+        // 2. 準備要寫入檔案的內容
+        let fileContent = "========== 工程隨機條件模擬記錄 ==========\n\n";
+        
+        historyRecords.forEach((record, index) => {
+            fileContent += `--- 第 ${historyRecords.length - index} 次模擬 ---\n`;
+            fileContent += `🕒 模擬時間: ${record.time}\n`;
+            fileContent += `組別: 第${record.group}組 / 工程名稱: ${record.projectName}\n`;
+            fileContent += `契約工期: ${record.contractDuration} / 契約總價: ${record.contractPrice}\n`;
+            fileContent += `📋 條件: ${record.condition}\n`;
+            fileContent += `💰 影響: ${record.impact}\n`;
+            fileContent += `可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays}\n`;
+            fileContent += `原始成本: ${record.originalCost} / 可追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost}\n`;
+            fileContent += `----------------------------\n\n`;
+        });
+        
+        fileContent += "========== 記錄結束 ==========";
+
+        // 3. 創建 Blob 物件
+        const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+
+        // 4. 創建下載連結並觸發下載
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName; 
+        
+        document.body.appendChild(a);
+        a.click(); // 模擬點擊，觸發下載
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href); // 釋放 Blob URL
+
+        alert(`記錄已成功匯出為檔案: ${fileName}`);
+    }
+
+
+    /**
+     * 記錄當前結果到歷史列表
+     * @param {string} conditionText 被選中的條件文字
+     * @param {string} calculatedImpact 計算出的影響文字
+     * @param {object} record 模擬結果資料
+     */
+    function recordHistory(record) {
+        const historyList = document.getElementById('history-list');
+        const now = new Date();
+        const timeString = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`; 
+
+        // 將記錄存入陣列 (用於匯出)
+        const newRecord = {
+            time: timeString,
+            ...record
+        };
+        historyRecords.unshift(newRecord); // 存入陣列最前面
+
+        // 創建 HTML 元素 (用於顯示)
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        historyItem.innerHTML = `
+            <div class="history-item-time">🕒 模擬時間: ${timeString}</div>
+            <div class="history-item-condition">第${record.group}組 / 工程名稱 ${record.projectName}</div>
+            <div class="history-item-condition">📋 條件: ${record.condition}</div>
+            <div class="history-item-impact">💰 影響: ${record.impact}</div>
+            <div class="history-item-inputs">契約工期: ${record.contractDuration} / 契約總價: ${record.contractPrice}</div>
+            <div class="history-item-inputs">可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays}</div>
+            <div class="history-item-inputs">原始成本: ${record.originalCost} / 可追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost}</div>
+        `;
+
+        if (historyList.textContent.trim() === "尚無記錄。") {
+            historyList.textContent = "";
+        }
+        historyList.prepend(historyItem);
+    }
+
+    /**
+     * 選擇一個隨機條件並計算影響值
+     */
+    function selectRandomCondition() {
+        const input = readInputs();
+        let conditionText = "";
+        let calculatedImpact = "";
+
+        if (isNaN(input.contractDuration) || input.contractDuration <= 0 || isNaN(input.contractPrice) || input.contractPrice <= 0) {
+            conditionText = "⚠️ 錯誤：請輸入有效的契約工期和契約總價 (需為大於 0 的數字)。";
+            calculatedImpact = "";
+            document.getElementById('selected-condition').textContent = conditionText;
+            document.getElementById('calculated-impact').textContent = calculatedImpact;
+            document.getElementById('result-box').style.display = "block";
+            document.getElementById('final-duration').textContent = "總工期：-";
+            document.getElementById('settlement-price').textContent = "契約總價：-";
+            return;
+        }
+
+        ensureStateForInputs(input);
+
+        const randomIndex = getRandomInt(0, conditions.length - 1);
+        const selectedCondition = conditions[randomIndex];
+
+        conditionText = `${selectedCondition.id}、 ${selectedCondition.text}`;
+        document.getElementById('selected-condition').textContent = conditionText;
+        
+        if (selectedCondition.impact !== "無影響" && selectedCondition.impact !== "無工期影響") {
+            const randomValue = getRandomInt(selectedCondition.min, selectedCondition.max);
+            const isIncrease = selectedCondition.impact.includes("增加");
+            const isDecrease = selectedCondition.impact.includes("減少");
+            const changes = [];
+
+            selectedCondition.targets.forEach(target => {
+                const direction = isDecrease ? -1 : 1;
+                let changeValue;
+                let baseLabel = "";
+
+                if (selectedCondition.unit === "天" && durationTargets.has(target)) {
+                let effectiveDays = randomValue;
+                    if (selectedCondition.impact.includes("總工期增加")) {
+                    effectiveDays = randomValue * 2;
+                }
+                    changeValue = effectiveDays;
+                    baseLabel = `${effectiveDays} 天`;
+                } else if (selectedCondition.unit === "%" && durationTargets.has(target)) {
+                    changeValue = Math.round(input.contractDuration * (randomValue / 100));
+                    baseLabel = `${randomValue}% (約 ${changeValue} 天)`;
+                } else if (selectedCondition.unit === "%" && costTargets.has(target)) {
+                    const costBase = target === "actualCost" ? currentState.originalCost : input.contractPrice;
+                    changeValue = Number((costBase * (randomValue / 100)).toFixed(2));
+                    baseLabel = `${randomValue}% (約 ${formatNumber(changeValue, 2)} 萬元)`;
+                } else {
+                    return;
+                }
+
+                if (target === "totalDuration") {
+                    currentState.totalDuration = Math.max(0, currentState.totalDuration + direction * changeValue);
+                } else if (target === "extendableDuration") {
+                    currentState.extendableDuration = Math.max(0, currentState.extendableDuration + direction * changeValue);
+                } else if (target === "contractPrice") {
+                    currentState.contractPrice = Math.max(0, currentState.contractPrice + direction * changeValue);
+                } else if (target === "actualCost") {
+                    currentState.actualCost = Math.max(0, currentState.actualCost + direction * changeValue);
+                } else if (target === "adjustableCost") {
+                    currentState.adjustableCost += direction * changeValue;
+                }
+
+                const directionText = direction > 0 ? "增加" : "減少";
+                changes.push(`${targetLabels[target]}${directionText} ${baseLabel}`);
+            });
+
+            calculatedImpact = `隨機影響值：${changes.join("；")}。`;
+
+        } else {
+            calculatedImpact = selectedCondition.impact === "無工期影響"
+                ? "此條件無工期影響。"
+                : "此條件無工期或價格上的量化影響。";
+        }
+
+        currentState.totalDuration = Math.round(currentState.totalDuration);
+        currentState.extendableDuration = Math.round(currentState.extendableDuration);
+        currentState.contractPrice = Number(currentState.contractPrice.toFixed(2));
+        currentState.actualCost = Number(currentState.actualCost.toFixed(2));
+        currentState.adjustableCost = Number(currentState.adjustableCost.toFixed(2));
+        renderStatusCard();
+
+        document.getElementById('calculated-impact').textContent = calculatedImpact;
+        document.getElementById('result-box').style.display = "block";
+        document.getElementById('final-duration').textContent = `總工期：${formatDuration(currentState.totalDuration)}`;
+        document.getElementById('settlement-price').textContent = `契約總價：${formatMoney(currentState.contractPrice)}`;
+
+        // 記錄歷史結果
+        recordHistory({
+            group: input.group,
+            projectName: input.projectName,
+            contractDuration: formatDuration(currentState.contractDuration),
+            contractPrice: formatMoney(currentState.contractPrice),
+            condition: conditionText,
+            impact: calculatedImpact,
+            extendableDuration: formatDuration(currentState.extendableDuration),
+            totalDuration: formatDuration(currentState.totalDuration),
+            overdueDays: formatDuration(currentState.overdueDays),
+            originalCost: formatMoney(currentState.originalCost),
+            adjustableCost: formatMoney(currentState.adjustableCost),
+            actualCost: formatMoney(currentState.actualCost)
+        });
+    }
+</script>
+
+</body>
+</html>
