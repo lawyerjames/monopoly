@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
@@ -297,7 +297,7 @@
                 <span class="status-number" id="card-contract-duration">600 工作天</span>
             </div>
             <div class="status-cell">
-                <span class="status-label">可展延工期</span>
+                <span class="status-label">請求展延工期</span>
                 <span class="status-number" id="card-extendable-duration">0 工作天</span>
             </div>
             <div class="status-cell">
@@ -312,15 +312,15 @@
         <div class="status-row">
             <div class="status-cell">
                 <span class="status-label">預算金額</span>
-                <span class="status-number" id="card-contract-price">20,080 萬元</span>
+                <span class="status-number" id="card-contract-price">2億80萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">契約總價</span>
-                <span class="status-number" id="card-award-price">20,080 萬元</span>
+                <span class="status-number" id="card-award-price">2億80萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">原始成本</span>
-                <span class="status-number" id="card-original-cost">18,072 萬元</span>
+                <span class="status-number" id="card-original-cost">1億8,072萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">預估成本率</span>
@@ -333,15 +333,15 @@
                 <span class="status-number" id="card-bond">2,008 萬元</span>
             </div>
             <div class="status-cell">
-                <span class="status-label">可追加(減)費用</span>
+                <span class="status-label">請求追加(減)費用</span>
                 <span class="status-number" id="card-adjustable-cost">0 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">實際支出成本</span>
-                <span class="status-number" id="card-actual-cost">18,072 萬元</span>
+                <span class="status-number" id="card-actual-cost">1億8,072萬元</span>
             </div>
             <div class="status-cell">
-                <span class="status-label">逾期違約金</span>
+                <span class="status-label">預估逾期違約金</span>
                 <span class="status-number is-danger-text" id="card-delay-penalty">0 萬元</span>
             </div>
         </div>
@@ -352,14 +352,14 @@
             </div>
             <div class="status-cell">
                 <span class="status-label">資本額</span>
-                <span class="status-number" id="card-vendor-capital">10,000 萬元</span>
+                <span class="status-number" id="card-vendor-capital">1億元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">現有資金</span>
                 <span class="status-number" id="card-vendor-cash">5,000 萬元</span>
             </div>
             <div class="status-cell">
-                <span class="status-label">損益試算</span>
+                <span class="status-label">預估損益</span>
                 <span class="status-number" id="card-profit-loss">2,008 萬元</span>
             </div>
         </div>
@@ -399,24 +399,24 @@
     const conditions = [
         { id: 1, text: "工地主任調度困難，工程進度落後", impact: "總工期增加", min: 1, max: 5, unit: "%", targets: ["totalDuration"] },
         { id: 2, text: "工地發生重大職災，等待勞檢停工", impact: "總工期增加", min: 3, max: 5, unit: "天", targets: ["totalDuration"] },
-        { id: 3, text: "設計錯誤等待變更", impact: "總工期增加、可展延工期增加", min: 3, max: 30, unit: "天", targets: ["totalDuration", "extendableDuration"] },
-        { id: 4, text: "追加工項增加工期", impact: "總工期增加、可展延工期增加", min: 1, max: 5, unit: "%", targets: ["totalDuration", "extendableDuration"] },
-        { id: 5, text: "颱風來襲，停班停課", impact: "總工期增加、可展延工期增加", min: 1, max: 3, unit: "天", targets: ["totalDuration", "extendableDuration"] },
-        { id: 6, text: "連續豪雨，無法施工", impact: "總工期增加、可展延工期增加", min: 3, max: 10, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 3, text: "設計錯誤等待變更", impact: "總工期增加、請求展延工期增加", min: 3, max: 30, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 4, text: "追加工項增加工期", impact: "總工期增加、請求展延工期增加", min: 1, max: 5, unit: "%", targets: ["totalDuration", "extendableDuration"] },
+        { id: 5, text: "颱風來襲，停班停課", impact: "總工期增加、請求展延工期增加", min: 1, max: 3, unit: "天", targets: ["totalDuration", "extendableDuration"] },
+        { id: 6, text: "連續豪雨，無法施工", impact: "總工期增加、請求展延工期增加", min: 3, max: 10, unit: "天", targets: ["totalDuration", "extendableDuration"] },
         { id: 7, text: "協力廠商提前交貨，實際工期減少", impact: "總工期減少", min: 1, max: 5, unit: "天", targets: ["totalDuration"] },
         { id: 8, text: "協力廠商延遲交貨，實際工期增加", impact: "總工期增加", min: 1, max: 5, unit: "天", targets: ["totalDuration"] },
-        { id: 9, text: "圖說設計錯誤，變更設計增加費用", impact: "總工期增加、可展延工期增加、實際支出成本增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration", "actualCost"] },
+        { id: 9, text: "圖說設計錯誤，變更設計增加費用", impact: "總工期增加、請求展延工期增加、實際支出成本增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration", "actualCost"] },
         { id: 10, text: "施作錯誤，成本增加", impact: "實際支出成本增加", min: 1, max: 10, unit: "%", targets: ["actualCost"] },
-        { id: 11, text: "中東發生戰爭，物價上漲，成本增加", impact: "實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
-        { id: 12, text: "中國經濟蕭條，整體物價下跌，成本減少", impact: "實際支出成本減少、可追加(減)費用減少", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
+        { id: 11, text: "中東發生戰爭，物價上漲，成本增加", impact: "實際支出成本增加、請求追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
+        { id: 12, text: "中國經濟蕭條，整體物價下跌，成本減少", impact: "實際支出成本減少、請求追加(減)費用減少", min: 1, max: 10, unit: "%", targets: ["actualCost", "adjustableCost"] },
         { id: 13, text: "老闆念完EMBA，引進新的管理方法，成本減少", impact: "實際支出成本減少", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
         { id: 14, text: "工地主任收回扣，進貨報價提高，成本增加", impact: "實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
-        { id: 15, text: "發生地震，還好有保營造業綜合保險，無損失。", impact: "總工期增加、可展延工期增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration"] },
+        { id: 15, text: "發生地震，還好有保營造業綜合保險，無損失。", impact: "總工期增加、請求展延工期增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration"] },
         { id: 16, text: "發生火災，雖然有保火險，但有自付額", impact: "總工期增加、實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["totalDuration", "actualCost"] },
-        { id: 17, text: "新任首長認為規劃不足，增加工項", impact: "總工期增加、可展延工期增加、契約總價增加、實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration", "contractPrice", "actualCost", "adjustableCost"] },
+        { id: 17, text: "新任首長認為規劃不足，增加工項", impact: "總工期增加、請求展延工期增加、契約總價增加、實際支出成本增加、請求追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration", "contractPrice", "actualCost", "adjustableCost"] },
         { id: 18, text: "新版財劃法，教育部補助減少，減作項目", impact: "契約總價減少、實際支出成本減少", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost"] },
         { id: 19, text: "新版財劃法，教育部補助減少，無法按期給付估驗款", impact: "無工期影響" },
-        { id: 20, text: "廠商因為業主無法按期給付估驗款跳票", impact: "總工期增加、可展延工期增加", min: 5, max: 15, unit: "%", targets: ["totalDuration", "extendableDuration"] }
+        { id: 20, text: "廠商因為業主無法按期給付估驗款跳票", impact: "總工期增加、請求展延工期增加", min: 5, max: 15, unit: "%", targets: ["totalDuration", "extendableDuration"] }
     ];
 
     // 用來儲存歷史記錄的陣列
@@ -466,10 +466,10 @@
     const costTargets = new Set(["contractPrice", "actualCost", "adjustableCost"]);
     const targetLabels = {
         totalDuration: "總工期",
-        extendableDuration: "可展延工期",
+        extendableDuration: "請求展延工期",
         contractPrice: "契約總價",
         actualCost: "實際支出成本",
-        adjustableCost: "可追加(減)費用"
+        adjustableCost: "請求追加(減)費用"
     };
 
     // 填充條件列表到 HTML 
@@ -510,9 +510,20 @@
     }
 
     function formatMoney(value) {
-        return `${formatNumber(Math.round(value))} 萬元`;
-    }
+        const roundedValue = Math.round(value);
+        const absValue = Math.abs(roundedValue);
+        const sign = roundedValue < 0 ? "-" : "";
 
+        if (absValue >= 10000) {
+            const yi = Math.floor(absValue / 10000);
+            const wan = absValue % 10000;
+            return wan === 0
+                ? `${sign}${formatNumber(yi)}億元`
+                : `${sign}${formatNumber(yi)}億${formatNumber(wan)}萬元`;
+        }
+
+        return `${sign}${formatNumber(absValue)}萬元`;
+    }
     function sanitizeFileName(value) {
         return value
             .replace(/[\\/:*?"<>|]/g, "_")
@@ -726,8 +737,8 @@
             fileContent += `履約期限: ${record.contractDuration} / 預算金額: ${record.budgetPrice} / 底價金額: ${record.floorPrice} / 契約總價: ${record.contractPrice}\n`;
             fileContent += `📋 條件: ${record.condition}\n`;
             fileContent += `💰 影響: ${record.impact}\n`;
-            fileContent += `可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays} / 逾期違約金: ${record.delayPenalty}\n`;
-            fileContent += `原始成本: ${record.originalCost} / 可追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost} / 損益試算: ${record.profitLoss}\n`;
+            fileContent += `請求展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays} / 預估逾期違約金: ${record.delayPenalty}\n`;
+            fileContent += `原始成本: ${record.originalCost} / 請求追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost} / 預估損益: ${record.profitLoss}\n`;
             fileContent += `----------------------------\n\n`;
         });
         
@@ -779,8 +790,8 @@
             <div class="history-item-condition">📋 條件: ${record.condition}</div>
             <div class="history-item-impact">💰 影響: ${record.impact}</div>
             <div class="history-item-inputs">履約期限: ${record.contractDuration} / 預算金額: ${record.budgetPrice} / 底價金額: ${record.floorPrice} / 契約總價: ${record.contractPrice}</div>
-            <div class="history-item-inputs">可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays} / 逾期違約金: ${record.delayPenalty}</div>
-            <div class="history-item-inputs">原始成本: ${record.originalCost} / 可追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost} / 損益試算: ${record.profitLoss}</div>
+            <div class="history-item-inputs">請求展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays} / 預估逾期違約金: ${record.delayPenalty}</div>
+            <div class="history-item-inputs">原始成本: ${record.originalCost} / 請求追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost} / 預估損益: ${record.profitLoss}</div>
         `;
 
         if (historyList.textContent.trim() === "尚無記錄。") {
@@ -858,7 +869,7 @@
                 } else if (selectedCondition.unit === "%" && costTargets.has(target)) {
                     const costBase = target === "actualCost" ? currentState.originalCost : currentState.contractPrice;
                     changeValue = Number((costBase * (randomValue / 100)).toFixed(2));
-                    baseLabel = `${randomValue}% (約 ${formatNumber(Math.round(changeValue))} 萬元)`;
+                    baseLabel = `${randomValue}% (約 ${formatMoney(changeValue)})`;
                 } else {
                     return;
                 }
