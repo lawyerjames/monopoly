@@ -513,6 +513,13 @@
         return `${formatNumber(Math.round(value))} 萬元`;
     }
 
+    function sanitizeFileName(value) {
+        return value
+            .replace(/[\\/:*?"<>|]/g, "_")
+            .replace(/\s+/g, "")
+            .trim();
+    }
+
     function getSelectedProject() {
         return projectDefaults[document.getElementById('projectName').value];
     }
@@ -695,14 +702,18 @@
             return;
         }
 
+        const input = readInputs();
+        const dateText = new Date().toISOString().slice(0, 10);
+        const defaultFileName = sanitizeFileName(`${input.projectLabel}_${input.vendorName}_${dateText}_工程隨機條件記錄`);
+
         // 1. 彈出對話框讓使用者輸入檔名
-        let fileName = prompt("請輸入匯出的檔案名稱 (不需副檔名):", "工程隨機條件記錄_" + new Date().toISOString().slice(0, 10));
+        let fileName = prompt("請輸入匯出的檔案名稱 (不需副檔名):", defaultFileName);
 
         if (fileName === null) {
             return; // 使用者點擊了取消
         }
         
-        fileName = fileName.trim() || "random_event_log"; // 如果為空，設定一個預設檔名
+        fileName = sanitizeFileName(fileName.trim()) || defaultFileName || "random_event_log"; // 如果為空，設定一個預設檔名
         fileName += ".txt"; // 確保是 .txt 檔案
 
         // 2. 準備要寫入檔案的內容
