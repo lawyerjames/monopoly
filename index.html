@@ -251,66 +251,62 @@
 
     <div class="input-group">
         <div class="input-item">
-            <label for="groupSelect">組別</label>
-            <select id="groupSelect">
-                <option value="一">第一組</option>
-                <option value="二">第二組</option>
-                <option value="三">第三組</option>
-                <option value="四">第四組</option>
-                <option value="五">第五組</option>
-                <option value="六">第六組</option>
-                <option value="七">第七組</option>
-                <option value="八">第八組</option>
-                <option value="九">第九組</option>
-                <option value="十">第十組</option>
-            </select>
-        </div>
-        <div class="input-item">
             <label for="projectName">工程名稱</label>
             <select id="projectName">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
             </select>
         </div>
         <div class="input-item">
-            <label for="totalDuration">契約工期(日曆天)</label>
-            <input type="number" id="totalDuration" value="365" min="1" required>
+            <label for="vendorSelect">廠商</label>
+            <select id="vendorSelect">
+            </select>
         </div>
         <div class="input-item">
-            <label for="totalPrice">契約總價 (萬元)</label>
-            <input type="number" id="totalPrice" value="10000" min="1" required>
+            <label for="totalDuration">履約期限(工作天)</label>
+            <input type="number" id="totalDuration" value="300" min="1" required>
+        </div>
+        <div class="input-item">
+            <label for="totalPrice">預算金額 (萬元)</label>
+            <input type="number" id="totalPrice" value="2080" min="1" required>
         </div>
     </div>
 
     <div class="status-card" id="status-card">
         <div class="status-row">
             <div class="status-cell">
-                <span class="status-label">契約工期</span>
-                <span class="status-number" id="card-contract-duration">365 日曆天</span>
+                <span class="status-label">履約期限</span>
+                <span class="status-number" id="card-contract-duration">300 工作天</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">可展延工期</span>
-                <span class="status-number" id="card-extendable-duration">0 日曆天</span>
+                <span class="status-number" id="card-extendable-duration">0 工作天</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">總工期</span>
-                <span class="status-number" id="card-total-duration">365 日曆天</span>
+                <span class="status-number" id="card-total-duration">300 工作天</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">逾期天數</span>
-                <span class="status-number" id="card-overdue-days">0 日曆天</span>
+                <span class="status-number" id="card-overdue-days">0 工作天</span>
             </div>
         </div>
         <div class="status-row">
             <div class="status-cell">
-                <span class="status-label">契約總價</span>
-                <span class="status-number" id="card-contract-price">10,000 萬元</span>
+                <span class="status-label">預算金額</span>
+                <span class="status-number" id="card-contract-price">2,080 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">原始成本</span>
-                <span class="status-number" id="card-original-cost">8,000 萬元</span>
+                <span class="status-number" id="card-original-cost">1,872 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">預估成本率</span>
+                <span class="status-number" id="card-cost-rate">90%</span>
+            </div>
+        </div>
+        <div class="status-row">
+            <div class="status-cell">
+                <span class="status-label">履約保證金</span>
+                <span class="status-number" id="card-bond">208 萬元</span>
             </div>
             <div class="status-cell">
                 <span class="status-label">可追加(減)費用</span>
@@ -318,7 +314,25 @@
             </div>
             <div class="status-cell">
                 <span class="status-label">實際支出成本</span>
-                <span class="status-number" id="card-actual-cost">8,000 萬元</span>
+                <span class="status-number" id="card-actual-cost">1,872 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">廠商等級</span>
+                <span class="status-number" id="card-vendor-grade">甲</span>
+            </div>
+        </div>
+        <div class="status-row">
+            <div class="status-cell">
+                <span class="status-label">資本額</span>
+                <span class="status-number" id="card-vendor-capital">10,000 萬元</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">固定營運成本</span>
+                <span class="status-number" id="card-vendor-operating-cost">200 萬元/月</span>
+            </div>
+            <div class="status-cell">
+                <span class="status-label">現有資金</span>
+                <span class="status-number" id="card-vendor-cash">3,000 萬元</span>
             </div>
         </div>
     </div>
@@ -327,11 +341,11 @@
 
     <div id="result-box">
         <h2>✅ 最新隨機結果</h2>
-        <span id="selected-condition">請先選擇組別、工程名稱，並輸入契約工期與契約總價，然後點擊上方按鈕開始模擬。</span>
+        <span id="selected-condition">請先選擇工程名稱與廠商，並輸入履約期限與預算金額，然後點擊上方按鈕開始模擬。</span>
         <span id="calculated-impact"></span>
         <div class="result-summary">
             <div class="result-value" id="final-duration">總工期：-</div>
-            <div class="result-value" id="settlement-price">契約總價：-</div>
+            <div class="result-value" id="settlement-price">預算金額：-</div>
         </div>
     </div>
 
@@ -371,8 +385,8 @@
         { id: 14, text: "工地主任收回扣，進貨報價提高，成本增加", impact: "實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["actualCost"] },
         { id: 15, text: "發生地震，還好有保營造業綜合保險，無損失。", impact: "總工期增加、可展延工期增加", min: 1, max: 10, unit: "%", targets: ["totalDuration", "extendableDuration"] },
         { id: 16, text: "發生火災，雖然有保火險，但有自付額", impact: "總工期增加、實際支出成本增加", min: 5, max: 5, unit: "%", targets: ["totalDuration", "actualCost"] },
-        { id: 17, text: "新任首長認為規劃不足，增加工項", impact: "契約總價增加、實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost", "adjustableCost"] },
-        { id: 18, text: "新版財劃法，教育部補助減少，減作項目", impact: "契約總價減少、實際支出成本減少", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost"] },
+        { id: 17, text: "新任首長認為規劃不足，增加工項", impact: "預算金額增加、實際支出成本增加、可追加(減)費用增加", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost", "adjustableCost"] },
+        { id: 18, text: "新版財劃法，教育部補助減少，減作項目", impact: "預算金額減少、實際支出成本減少", min: 1, max: 10, unit: "%", targets: ["contractPrice", "actualCost"] },
         { id: 19, text: "新版財劃法，教育部補助減少，無法按期給付估驗款", impact: "無工期影響" },
         { id: 20, text: "廠商因為業主無法按期給付估驗款跳票", impact: "總工期增加", min: 5, max: 15, unit: "%", targets: ["totalDuration"] }
     ];
@@ -382,12 +396,60 @@
     let accumulationKey = "";
     let currentState = null;
 
+    const projectDefaults = {
+        A: {
+            name: "A組-模擬法庭新建工程",
+            budget: 2080,
+            duration: 300,
+            bondRate: 0.1,
+            costRate: 0.9
+        },
+        B: {
+            name: "B組-法學院大樓新工程",
+            budget: 23000,
+            duration: 1020,
+            bondRate: 0.1,
+            costRate: 0.85
+        },
+        C: {
+            name: "C組-社科院耐震補強工程",
+            budget: 1600,
+            duration: 180,
+            bondRate: 0.1,
+            costRate: 0.9
+        }
+    };
+
+    const vendorDefaults = {
+        "甲": {
+            name: "甲-穩賺工程股份有限公司",
+            grade: "甲",
+            capital: 10000,
+            operatingCost: 200,
+            cash: 3000
+        },
+        "乙": {
+            name: "乙-佛系營造有限公司",
+            grade: "乙",
+            capital: 2500,
+            operatingCost: 80,
+            cash: 2000
+        },
+        "丙": {
+            name: "丙-度大月營造有限公司",
+            grade: "丙",
+            capital: 1500,
+            operatingCost: 40,
+            cash: 5000
+        }
+    };
+
     const durationTargets = new Set(["totalDuration", "extendableDuration"]);
     const costTargets = new Set(["contractPrice", "actualCost", "adjustableCost"]);
     const targetLabels = {
         totalDuration: "總工期",
         extendableDuration: "可展延工期",
-        contractPrice: "契約總價",
+        contractPrice: "預算金額",
         actualCost: "實際支出成本",
         adjustableCost: "可追加(減)費用"
     };
@@ -426,21 +488,36 @@
     }
 
     function formatDuration(value) {
-        return `${formatNumber(Math.round(value))} 日曆天`;
+        return `${formatNumber(Math.round(value))} 工作天`;
     }
 
     function formatMoney(value) {
         return `${formatNumber(Math.round(value))} 萬元`;
     }
 
-    function makeState(contractDuration, contractPrice) {
-        const originalCost = Number((contractPrice * 0.8).toFixed(2));
+    function formatMonthlyMoney(value) {
+        return `${formatNumber(Math.round(value))} 萬元/月`;
+    }
+
+    function getSelectedProject() {
+        return projectDefaults[document.getElementById('projectName').value];
+    }
+
+    function getSelectedVendor() {
+        return vendorDefaults[document.getElementById('vendorSelect').value];
+    }
+
+    function makeState(contractDuration, contractPrice, costRate, bondRate) {
+        const originalCost = Number((contractPrice * costRate).toFixed(2));
         return {
             contractDuration,
             extendableDuration: 0,
             totalDuration: contractDuration,
             overdueDays: 0,
             contractPrice,
+            costRate,
+            bondRate,
+            bond: Number((contractPrice * bondRate).toFixed(2)),
             originalCost,
             adjustableCost: 0,
             actualCost: originalCost
@@ -463,24 +540,37 @@
         document.getElementById('card-total-duration').textContent = formatDuration(currentState.totalDuration);
         document.getElementById('card-overdue-days').textContent = formatDuration(currentState.overdueDays);
         document.getElementById('card-contract-price').textContent = formatMoney(currentState.contractPrice);
+        document.getElementById('card-cost-rate').textContent = `${Math.round(currentState.costRate * 100)}%`;
+        document.getElementById('card-bond').textContent = formatMoney(currentState.bond);
         document.getElementById('card-original-cost').textContent = formatMoney(currentState.originalCost);
         document.getElementById('card-adjustable-cost').textContent = formatMoney(currentState.adjustableCost);
         document.getElementById('card-actual-cost').textContent = formatMoney(currentState.actualCost);
+
+        const vendor = getSelectedVendor();
+        document.getElementById('card-vendor-grade').textContent = vendor.grade;
+        document.getElementById('card-vendor-capital').textContent = formatMoney(vendor.capital);
+        document.getElementById('card-vendor-operating-cost').textContent = formatMonthlyMoney(vendor.operatingCost);
+        document.getElementById('card-vendor-cash').textContent = formatMoney(vendor.cash);
     }
 
     function readInputs() {
+        const project = getSelectedProject();
         return {
-            group: document.getElementById('groupSelect').value,
             projectName: document.getElementById('projectName').value,
+            projectLabel: project.name,
+            vendor: document.getElementById('vendorSelect').value,
+            vendorName: getSelectedVendor().name,
             contractDuration: parseFloat(document.getElementById('totalDuration').value),
-            contractPrice: parseFloat(document.getElementById('totalPrice').value)
+            contractPrice: parseFloat(document.getElementById('totalPrice').value),
+            costRate: project.costRate,
+            bondRate: project.bondRate
         };
     }
 
     function ensureStateForInputs(input) {
-        const currentKey = `${input.group}|${input.projectName}|${input.contractDuration}|${input.contractPrice}`;
+        const currentKey = `${input.projectName}|${input.vendor}|${input.contractDuration}|${input.contractPrice}|${input.costRate}|${input.bondRate}`;
         if (currentKey !== accumulationKey || !currentState) {
-            currentState = makeState(input.contractDuration, input.contractPrice);
+            currentState = makeState(input.contractDuration, input.contractPrice, input.costRate, input.bondRate);
             accumulationKey = currentKey;
         }
         renderStatusCard();
@@ -491,7 +581,7 @@
         accumulationKey = "";
         const input = readInputs();
         if (!isNaN(input.contractDuration) && input.contractDuration > 0 && !isNaN(input.contractPrice) && input.contractPrice > 0) {
-            currentState = makeState(input.contractDuration, input.contractPrice);
+            currentState = makeState(input.contractDuration, input.contractPrice, input.costRate, input.bondRate);
             renderStatusCard();
         } else {
             currentState = null;
@@ -501,17 +591,43 @@
     function handleInputChange() {
         const input = readInputs();
         if (!isNaN(input.contractDuration) && input.contractDuration > 0 && !isNaN(input.contractPrice) && input.contractPrice > 0) {
-            currentState = makeState(input.contractDuration, input.contractPrice);
+            currentState = makeState(input.contractDuration, input.contractPrice, input.costRate, input.bondRate);
             accumulationKey = "";
             renderStatusCard();
         }
     }
 
-    document.getElementById('groupSelect').addEventListener('change', handleInputChange);
-    document.getElementById('projectName').addEventListener('change', handleInputChange);
+    function populateDefaults() {
+        const projectSelect = document.getElementById('projectName');
+        Object.entries(projectDefaults).forEach(([id, project]) => {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = project.name;
+            projectSelect.appendChild(option);
+        });
+
+        const vendorSelect = document.getElementById('vendorSelect');
+        Object.entries(vendorDefaults).forEach(([id, vendor]) => {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = vendor.name;
+            vendorSelect.appendChild(option);
+        });
+    }
+
+    function applyProjectDefaults() {
+        const project = getSelectedProject();
+        document.getElementById('totalDuration').value = project.duration;
+        document.getElementById('totalPrice').value = project.budget;
+        handleInputChange();
+    }
+
+    populateDefaults();
+    document.getElementById('projectName').addEventListener('change', applyProjectDefaults);
+    document.getElementById('vendorSelect').addEventListener('change', handleInputChange);
     document.getElementById('totalDuration').addEventListener('input', handleInputChange);
     document.getElementById('totalPrice').addEventListener('input', handleInputChange);
-    handleInputChange();
+    applyProjectDefaults();
 
     /**
      * 清除所有歷史記錄
@@ -525,7 +641,7 @@
         historyList.textContent = "尚無記錄。";
         document.getElementById('result-box').style.display = "none";
         document.getElementById('final-duration').textContent = "總工期：-";
-        document.getElementById('settlement-price').textContent = "契約總價：-";
+        document.getElementById('settlement-price').textContent = "預算金額：-";
         alert("歷史記錄已清除！");
     }
 
@@ -554,8 +670,8 @@
         historyRecords.forEach((record, index) => {
             fileContent += `--- 第 ${historyRecords.length - index} 次模擬 ---\n`;
             fileContent += `🕒 模擬時間: ${record.time}\n`;
-            fileContent += `組別: 第${record.group}組 / 工程名稱: ${record.projectName}\n`;
-            fileContent += `契約工期: ${record.contractDuration} / 契約總價: ${record.contractPrice}\n`;
+            fileContent += `工程名稱: ${record.projectName} / 廠商: ${record.vendorName}\n`;
+            fileContent += `履約期限: ${record.contractDuration} / 預算金額: ${record.contractPrice}\n`;
             fileContent += `📋 條件: ${record.condition}\n`;
             fileContent += `💰 影響: ${record.impact}\n`;
             fileContent += `可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays}\n`;
@@ -606,10 +722,10 @@
         
         historyItem.innerHTML = `
             <div class="history-item-time">🕒 模擬時間: ${timeString}</div>
-            <div class="history-item-condition">第${record.group}組 / 工程名稱 ${record.projectName}</div>
+            <div class="history-item-condition">工程名稱 ${record.projectName} / 廠商 ${record.vendorName}</div>
             <div class="history-item-condition">📋 條件: ${record.condition}</div>
             <div class="history-item-impact">💰 影響: ${record.impact}</div>
-            <div class="history-item-inputs">契約工期: ${record.contractDuration} / 契約總價: ${record.contractPrice}</div>
+            <div class="history-item-inputs">履約期限: ${record.contractDuration} / 預算金額: ${record.contractPrice}</div>
             <div class="history-item-inputs">可展延工期: ${record.extendableDuration} / 總工期: ${record.totalDuration} / 逾期天數: ${record.overdueDays}</div>
             <div class="history-item-inputs">原始成本: ${record.originalCost} / 可追加(減)費用: ${record.adjustableCost} / 實際支出成本: ${record.actualCost}</div>
         `;
@@ -629,13 +745,13 @@
         let calculatedImpact = "";
 
         if (isNaN(input.contractDuration) || input.contractDuration <= 0 || isNaN(input.contractPrice) || input.contractPrice <= 0) {
-            conditionText = "⚠️ 錯誤：請輸入有效的契約工期和契約總價 (需為大於 0 的數字)。";
+            conditionText = "⚠️ 錯誤：請輸入有效的履約期限和預算金額 (需為大於 0 的數字)。";
             calculatedImpact = "";
             document.getElementById('selected-condition').textContent = conditionText;
             document.getElementById('calculated-impact').textContent = calculatedImpact;
             document.getElementById('result-box').style.display = "block";
             document.getElementById('final-duration').textContent = "總工期：-";
-            document.getElementById('settlement-price').textContent = "契約總價：-";
+            document.getElementById('settlement-price').textContent = "預算金額：-";
             return;
         }
 
@@ -710,12 +826,12 @@
         document.getElementById('calculated-impact').textContent = calculatedImpact;
         document.getElementById('result-box').style.display = "block";
         document.getElementById('final-duration').textContent = `總工期：${formatDuration(currentState.totalDuration)}`;
-        document.getElementById('settlement-price').textContent = `契約總價：${formatMoney(currentState.contractPrice)}`;
+        document.getElementById('settlement-price').textContent = `預算金額：${formatMoney(currentState.contractPrice)}`;
 
         // 記錄歷史結果
         recordHistory({
-            group: input.group,
-            projectName: input.projectName,
+            projectName: input.projectLabel,
+            vendorName: input.vendorName,
             contractDuration: formatDuration(currentState.contractDuration),
             contractPrice: formatMoney(currentState.contractPrice),
             condition: conditionText,
